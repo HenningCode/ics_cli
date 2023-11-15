@@ -1,6 +1,7 @@
 use chrono::*;
 //use chrono_tz::Europe::Berlin;
 use icalendar::*;
+use std::{fs::File, io::Write};
 
 mod helpers;
 
@@ -16,11 +17,11 @@ fn main() {
         match input {
             Ok(v) => {
                 if v == helpers::Return::Yes { 
-                    break
+                    break;
                 }
                 if v == helpers::Return::No { 
                     println!("Okay bye");
-                    return
+                    return;
                 }
             },
             Err(e) => println!("{e}"),
@@ -43,12 +44,19 @@ fn main() {
         my_calendar.push(
             Event::new()
                 .starts(Utc.with_ymd_and_hms(year, month, day, 0, 0, 0).unwrap())
-                .description(&discription)
+                .summary(&discription)
                 .done(),
         );
 
     }
 
-    println!("{}", my_calendar);
+    let file_result = File::create("{calendar_name}.ical");
+    let mut file = match file_result {
+        Ok(f) => f,
+        Err(_) => File::open("{calendar_name}.ical").unwrap(),
+    };
 
+    file.write_all(my_calendar.to_string().as_bytes()).expect("Writing did not work!");
+    println!("{}", my_calendar);
+    
 }
