@@ -1,3 +1,7 @@
+use chrono::*;
+//use chrono_tz::Europe::Berlin;
+use icalendar::*;
+
 mod helpers;
 
 fn main() {
@@ -21,25 +25,30 @@ fn main() {
             },
             Err(e) => println!("{e}"),
         }
-    }
-    
-    println!("How many Events do you want to input?");
-    let mut line = String::new();
-    std::io::stdin().read_line(&mut line).expect("Couldn't read from stdin");
-    let input:i32 = line.trim().parse().expect("Input was not an integer.");
+    }  
+    let calendar_name = helpers::input_string_with_message("Whats the name of the calendar?");
 
-    for i in 0..input{
+    let mut my_calendar = Calendar::new()
+        .name(&calendar_name).done();
 
-        let discription = helpers::input_string_with_message("Please input the name of the event");
-        println!("Event {} is named: {}", i+1, discription);
-        let day = helpers::input_int_with_message("Please input the day of the event");
-        println!("Day of event {} is: {}", i+1, day);
-        let month = helpers::input_int_with_message("Please input the month of the event");
-        println!("Month of event {} is: {}", i+1, month);
+    let number_event = helpers::input_int_with_message("How many Events do you want to input?");
+
+    for _ in 0..number_event{
+
+        let discription = helpers::input_string_with_message("Please input the name of the event"); 
+        let day = helpers::input_int_with_message("Please input the day of the event") as u32;
+        let month = helpers::input_int_with_message("Please input the month of the event") as u32;
         let year = helpers::input_int_with_message("Please input the year of the event");
-        println!("Year of event {} is: {}", i+1, year);
+
+        my_calendar.push(
+            Event::new()
+                .starts(Utc.with_ymd_and_hms(year, month, day, 0, 0, 0).unwrap())
+                .description(&discription)
+                .done(),
+        );
 
     }
 
+    println!("{}", my_calendar);
 
 }
