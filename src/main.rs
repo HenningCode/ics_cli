@@ -1,5 +1,4 @@
-use chrono::*;
-//use chrono_tz::Europe::Berlin;
+use chrono_tz::Europe::Berlin;
 use icalendar::*;
 use std::{fs::File, io::Write};
 
@@ -43,20 +42,24 @@ fn main() {
 
         my_calendar.push(
             Event::new()
-                .starts(Utc.with_ymd_and_hms(year, month, day, 0, 0, 0).unwrap())
+                .starts(CalendarDateTime::from_ymd_hm_tzid(year, month, day, 20, 15, Berlin).unwrap())
                 .summary(&discription)
                 .done(),
         );
 
     }
 
-    let file_result = File::create("{calendar_name}.ical");
+    let file_name = format!("{calendar_name}.ical");
+
+
+    let file_result = File::create(file_name.clone());
     let mut file = match file_result {
         Ok(f) => f,
-        Err(_) => File::open("{calendar_name}.ical").unwrap(),
+        Err(_) => File::open(file_name).unwrap(),
     };
 
     file.write_all(my_calendar.to_string().as_bytes()).expect("Writing did not work!");
     println!("{}", my_calendar);
     
 }
+

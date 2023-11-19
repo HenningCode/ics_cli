@@ -23,7 +23,7 @@ pub fn input_string_with_message(msg: &str) -> String {
     std::io::stdin()
         .read_line(&mut line)
         .expect("Couldn't read from stdin");
-    line
+    line.trim().to_string()
 }
 
 pub fn input_int_with_message(msg: &str) -> i32 {
