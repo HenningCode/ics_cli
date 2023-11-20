@@ -42,4 +42,10 @@ pub fn input_int_with_message(msg: &str) -> i32 {
         };
     }
 }
+
+pub fn parse_string_date_to_int(date: String) -> (i32,i32,i32) {
+    
+
+    (1,1,1)
+}
  

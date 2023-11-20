@@ -1,11 +1,13 @@
 use chrono_tz::Europe::Berlin;
 use icalendar::*;
-use std::{fs::File, io::Write};
+use std::{fs::File, io::Write, path::{self, Path}};
+use regex::Regex;
 
 mod helpers;
 
 fn main() {
-
+    
+    let re = Regex::new(r"\d{2}\.\d{2}\.\d{4}").unwrap();
     println!("Hello do you want to create a calendar?[y/n]");
 
     
@@ -26,31 +28,36 @@ fn main() {
             Err(e) => println!("{e}"),
         }
     }  
+
     let calendar_name = helpers::input_string_with_message("Whats the name of the calendar?");
+    let number_event = helpers::input_int_with_message("How many Events do you want to input?");
 
     let mut my_calendar = Calendar::new()
         .name(&calendar_name).done();
-
-    let number_event = helpers::input_int_with_message("How many Events do you want to input?");
+    let file_name = format!("{calendar_name}.ical");
+    println!("{file_name}");
 
     for _ in 0..number_event{
 
-        let discription = helpers::input_string_with_message("Please input the name of the event"); 
-        let day = helpers::input_int_with_message("Please input the day of the event") as u32;
-        let month = helpers::input_int_with_message("Please input the month of the event") as u32;
-        let year = helpers::input_int_with_message("Please input the year of the event");
+        let discription = helpers::input_string_with_message("Please input the name of the event");
+        let mut valid = false;
+        let mut date = helpers::input_string_with_message("Whats the date of the event? (dd.mm.yyyy)");
+        loop {
+            valid = re.is_match(&date);
+            if valid {
+                break
+            }
+            date = helpers::input_string_with_message("Wrong input format. Try again! (dd.mm.yyyy)");
+        } 
 
-        my_calendar.push(
-            Event::new()
-                .starts(CalendarDateTime::from_ymd_hm_tzid(year, month, day, 20, 15, Berlin).unwrap())
-                .summary(&discription)
-                .done(),
-        );
+        // my_calendar.push(
+        //     Event::new()
+        //         .starts(CalendarDateTime::from_ymd_hm_tzid(year, month, day, 20, 15, Berlin).unwrap())
+        //         .summary(&discription)
+        //         .done(),
+        // );
 
     }
-
-    let file_name = format!("{calendar_name}.ical");
-
 
     let file_result = File::create(file_name.clone());
     let mut file = match file_result {

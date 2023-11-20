@@ -8,6 +8,7 @@ edition = "2021"
 [dependencies]
 chrono-tz = "0.8.4"
 chrono = "0.4"
+regex = "1.10.2"
 
 [dependencies.icalendar]
 version = "0.15.8"
