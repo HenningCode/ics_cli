@@ -13,8 +13,10 @@ pub fn match_input(input: &str) -> Result<Return,&'static str>{
 #[allow(dead_code)]
 pub fn input_string() -> String {
     let mut line = String::new();
-    std::io::stdin().read_line(&mut line).expect("Couldn't read from stdin");
-    line
+    std::io::stdin()
+        .read_line(&mut line)
+        .expect("Couldn't read from stdin");
+    line.trim().to_string()
 }
 
 pub fn input_string_with_message(msg: &str) -> String {

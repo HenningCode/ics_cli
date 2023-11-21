@@ -66,7 +66,5 @@ fn main() {
     };
 
     file.write_all(my_calendar.to_string().as_bytes()).expect("Writing did not work!");
-    println!("{}", my_calendar);
-    
 }
 
