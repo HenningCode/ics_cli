@@ -43,9 +43,11 @@ pub fn input_int_with_message(msg: &str) -> i32 {
     }
 }
 
-pub fn parse_string_date_to_int(date: String) -> (i32,i32,i32) {
-    
-
-    (1,1,1)
+pub fn parse_string_date_to_int(date: String) -> (u32,u32,i32) {
+    let d = date.as_str();
+    let day:u32 = d[..2].to_string().parse().unwrap();
+    let month:u32 = d[3..5].to_string().parse().unwrap();
+    let year:i32 = d[6..10].to_string().parse().unwrap();
+    (day,month,year)
 }
  

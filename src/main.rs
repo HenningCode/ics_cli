@@ -1,6 +1,6 @@
 use chrono_tz::Europe::Berlin;
 use icalendar::*;
-use std::{fs::File, io::Write, path::{self, Path}};
+use std::{fs::File, io::Write};
 use regex::Regex;
 
 mod helpers;
@@ -35,27 +35,27 @@ fn main() {
     let mut my_calendar = Calendar::new()
         .name(&calendar_name).done();
     let file_name = format!("{calendar_name}.ical");
-    println!("{file_name}");
 
     for _ in 0..number_event{
 
         let discription = helpers::input_string_with_message("Please input the name of the event");
-        let mut valid = false;
         let mut date = helpers::input_string_with_message("Whats the date of the event? (dd.mm.yyyy)");
         loop {
-            valid = re.is_match(&date);
+            let valid = re.is_match(&date);
             if valid {
-                break
+                break;
             }
             date = helpers::input_string_with_message("Wrong input format. Try again! (dd.mm.yyyy)");
         } 
 
-        // my_calendar.push(
-        //     Event::new()
-        //         .starts(CalendarDateTime::from_ymd_hm_tzid(year, month, day, 20, 15, Berlin).unwrap())
-        //         .summary(&discription)
-        //         .done(),
-        // );
+        let (day, month, year) = helpers::parse_string_date_to_int(date);
+
+        my_calendar.push(
+            Event::new()
+                .starts(CalendarDateTime::from_ymd_hm_tzid(year, month, day, 20, 15, Berlin).unwrap())
+                .summary(&discription)
+                .done(),
+        );
 
     }
 
